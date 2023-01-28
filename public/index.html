@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div style="display: none;"  id="mensajeLogin" >
+        
+    </div>
+    <div class="contenido">
+        <h3 id="login">Ingresar al Chat</h3>
+        <form id="form-chat">
+            <div class="elemento">
+                <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre" required />
+            </div>
+            <div class="elemento">
+                <input type="tel" id="telefono" name="telefono" placeholder="Ingrese su numero" required  maxlength="9"/>
+            </div>
+            <div id="procesar">
+                <input id="ingresar" type="submit" value="Ingresar" />
+            </div>
+        </form>
+    </div>
+    <script src="./js/auth.js"></script>
+
+</body>
+
+</html>
