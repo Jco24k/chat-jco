@@ -17,6 +17,8 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
+    "express-validator": "^6.14.3",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.0",
     "nodemon": "^2.0.20",
     "socket.io": "^4.5.4"

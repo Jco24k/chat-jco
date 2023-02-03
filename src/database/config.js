@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dbConnection = () => {
   mongoose.set("strictQuery", false);
   mongoose
-    .connect(process.env.MONGODB_CNN, {
+    .connect(process.env.MONGO_DB, {
       useNewUrlParser: true,
     })
     .then(() => console.log("Connected Database"))

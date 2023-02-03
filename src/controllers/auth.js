@@ -1,51 +1,67 @@
-const { response } = require('express');
+const { response } = require("express");
 
-const Usuario = require('../models/usuario');
+const UserModel = require("../models/user");
+const { generateJWT } = require("../helpers/generate-jwt");
 
+const ingresarChat = async (req, res = response) => {
+  const { nombre, numero } = req.body;
 
+  try {
+    let user = await UserModel.findOne({ numero });
+    if (!user) {
+      user = new UserModel({
+        nombre,
+        numero,
+        fecha_activo: new Date(),
+      });
+    } else {
+      user.nombre = nombre;
+      user.fecha_activo = new Date();
+    }
 
-const login = async(req, res = response) => {
+    await user.save();
+    const token = await generateJWT(user._id);
 
-    const { correo, password } = req.body;
+    res.json({
+      user,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Hable con el administrador",
+    });
+  }
+};
 
-    try {
-      
-        // Verificar si el email existe
-        const usuario = await Usuario.findOne({ correo });
-        if ( !usuario ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - correo'
-            });
-        }
+const renovarToken = async (req, res = response) => {
+  const { user } = req;
 
-        // SI el usuario está activo
-        if ( !usuario.estado ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - estado: false'
-            });
-        }
+  // Generar el JWT
+  const token = await generateJWT(user._id);
 
-        // Verificar la contraseña
-        const validPassword = bcryptjs.compareSync( password, usuario.password );
-        if ( !validPassword ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - password'
-            });
-        }
+  res.json({
+    user,
+    token,
+  });
+};
 
-        // Generar el JWT
-        const token = await generarJWT( usuario.id );
+const guardarUsuario = async ({ nombre, numero }) => {
+  let user = await findOne(numero);
+  if (!user) {
+    user = new UserModel({ nombre, numero });
+    await user.save();
+  }
+  return user;
+};
 
-        res.json({
-            usuario,
-            token
-        })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg: 'Hable con el administrador'
-        });
-    }   
-
-}
+const findOne = async (numero) => {
+  return await UserModel.findOne({
+    numero,
+  });
+};
+module.exports = {
+  ingresarChat,
+  renovarToken,
+  guardarUsuario,
+};

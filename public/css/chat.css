@@ -1,0 +1,23 @@
+.chat-list {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 385px !important;
+}
+
+.chat-list-contacts{
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 420px !important;
+}
+textarea {
+    width: 100%;
+}
+
+.fa{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

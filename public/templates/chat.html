@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Page CSS -->
+    <link href="../css/chat-app-page.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/chat.css" rel="stylesheet">
+    <link href="../css/animate.css" rel="stylesheet">
+
+    <!-- You can change the theme colors from here -->
+    <link href="../css/default-dark.css" id="theme" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="fix-header single-column card-no-border fix-sidebar">
+
+
+    <!-- Main wrapper -->
+
+    <div id="main-wrapper">
+
+
+        <!-- Page wrapper  -->
+
+        <div class="page-wrapper">
+
+
+            <!-- Container fluid  -->
+
+            <div class="container-fluid">
+
+
+
+                <!-- Start Page Content -->
+
+                <div class="row animated fadeIn">
+                    <div class="col-12">
+                        <div class="card m-b-0">
+                            <!-- .chat-row -->
+                            <div class="chat-main-box">
+                                <!-- .chat-left-panel -->
+                                <div class="chat-left-aside">
+                                    <div class="open-panel"><i class="ti-angle-right"></i></div>
+                                    <div class="chat-left-inner">
+                                        <div class="form-material">
+                                            <input class="form-control p-20" type="text" placeholder="Buscar Contacto">
+                                        </div>
+                                        <ul class="chatonline style-none chat-list-contacts" id="divUsuarios"> </ul>
+                                        <div style="text-align: right;  margin: 10px 20px">
+                                            <button type="button" class="btn btn-info btn-circle btn-lg"
+                                                data-toggle="modal" data-target="#addContact">
+                                                <i class="bx bxs-user-plus" style="font-size: 20px;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- .chat-left-panel -->
+                                <!-- .chat-right-panel -->
+                                <div id="sala-chat" class="chat-right-aside">
+                                    <div class="chat-main-header">
+                                        <div class="p-20 b-b">
+                                            <h3 class="box-title">Chat <small id="title-chat">General</small></h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-rbox">
+                                        <ul class="chat-list p-20" id="divChatbox">
+                                            <!--chat Row -->
+                                            <!-- <li>
+                                                <div class="chat-img"><img id="user-image"  src="../resources/user-image.jpg" alt="user" /></div>
+                                                <div class="chat-content">
+                                                    <h5>James Anderson</h5>
+                                                    <div class="box bg-light-info">Lorem Ipsum is simply dummy text of the printing & type setting industry.</div>
+                                                </div>
+                                                <div class="chat-time">10:56 am</div>
+                                            </li> -->
+
+                                            <!--chat Row -->
+                                            <!-- 
+                                                <li class="reverse">
+                                                <div class="chat-content">
+                                                    <h5>Steave Doe</h5>
+                                                    <div class="box bg-light-inverse">It’s Great opportunity to work.</div>
+                                                </div>
+                                                <div class="chat-img"><img src="assets/images/users/5.jpg" alt="user" /></div>
+                                                <div class="chat-time">10:57 am</div>
+                                            </li> -->
+
+
+                                        </ul>
+                                    </div>
+                                    <div class="card-body b-t">
+
+                                        <form id="formEnviar">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <input autocomplete="off" id="txtMensaje"
+                                                        placeholder="Escribe tu mensaje aquí" class="form-control b-0"
+                                                        autofocus>
+                                                </div>
+                                                <div class="col-4 text-right">
+                                                    <button type="submit" class="btn btn-info btn-circle btn-lg"><i
+                                                            class='bx bx-send'></i> </button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                                <!-- .chat-right-panel -->
+                            </div>
+                            <!-- /.chat-row -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End PAge Content -->
+
+
+            </div>
+
+
+            <!-- End Container fluid  -->
+
+
+            <!-- footer -->
+
+            <footer class="footer">
+                Super Chat - Jesus Coronado
+            </footer>
+
+            <!-- End footer -->
+
+        </div>
+
+        <!-- End Page wrapper  -->
+
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="addContact">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar Contacto</h4>
+                    <button id="btn-close-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <form id="form-add-contact">
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nombre-contact">Nombre:</label>
+                            <input type="text" class="form-control" placeholder="Ingrese el nombre" id="nombre-contact">
+                            <div style="
+                            color: red;
+                            text-align: center;
+                            font-weight: 500;
+                            " id="error-nombre"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="numero-contact">Telefono:</label>
+                            <input type="tel" class="form-control" placeholder="Ingrese el numero celular"
+                                id="numero-contact" maxlength="9">
+                            <div style="
+                            color: red;
+                            text-align: center;
+                            font-weight: 500;
+                            " id="error-numero"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="./../socket.io/socket.io.js"></script>
+
+
+    <script src="../js/chat.js"></script>
+    <script src="../js/chat-render.js"></script>
+
+
+</body>
+
+</html>
