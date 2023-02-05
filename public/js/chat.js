@@ -4,22 +4,16 @@ const url = window.location.hostname.includes("localhost")
 
 let user = null;
 let socket = null;
-let chatActual = null;
+let chatActualId = null;
 // Referencias HTML
 const formChat = document.querySelector("#formEnviar");
 const formAddContact = document.querySelector("#form-add-contact");
 const nombre = document.querySelector("#nombre-contact");
 const numero = document.querySelector("#numero-contact");
+const txtSearch = document.querySelector("#txtSearch");
+const ulContact = document.querySelector("#divUsuarios");
 
-
-
-// const btnAddContact = document.querySelector("#btn-add-contact");
-
-// const ulusers = document.querySelector('#ulusers');
-// const ulMensajes = document.querySelector('#ulMensajes');
-// const btnSalir   = document.querySelector('#btnSalir');
-
-// Validar el token del localstorage
+// VALIDAR TOKEN
 const validarJWT = async () => {
   const token = localStorage.getItem("token") || "";
 
@@ -37,6 +31,7 @@ const validarJWT = async () => {
   user = userDB;
   document.title = user.nombre;
 
+  changeUser(user)
   await conectarSocket();
 };
 
@@ -55,64 +50,39 @@ const conectarSocket = async () => {
     console.log("Sockets offline");
   });
 
-  socket.on("users-general", (users) => {
-    // console.log(users);
-  });
-
-  socket.on("recibir-mensajes", (messages) => {
-    renderizarMensajes(messages, user);
-    // console.log(messages);
-  });
-
+  //RECIBE LOS MENSAJES
   socket.on("recibir-chat", (chat) => {
-    chatActual = chat;
-    // console.log(chat)
+    if (!chatActualId) chatActualId = chat.uid;
+    if (chatActualId.toString() === chat.uid.toString())
+      renderizarChats(chat, user);
   });
 
-  socket.on("recibir-all-chat", (chats) => {
-    
-    renderizarUsuarios(chats)
-  });
-
+  //RECIBE CONTACTOS Y CHATS
   socket.on("recibir-all", (all) => {
-    console.log(all)
-  });
-
-  socket.on("mensaje-privado", ( payload ) => {
-      console.log('Privado:', payload )
-  });
-
-  socket.on("recibir-contactos", (contactos) => {
-    // renderizarUsuarios([
-    //   user,
-    //   ...contactos.map(({ contacto: { _id: uid, ...detailsCont } }) => ({
-    //     uid,
-    //     ...detailsCont,
-    //   })),
-    // ]);
+    renderContactsChats(all, user);
+    onClickAllUl(user);
+    searchContacts()
   });
 };
 
+//ENVIA NUEVO MENSAJE
 formChat.addEventListener("submit", (ev) => {
   ev.preventDefault();
   const message = document.querySelector("#txtMensaje").value.trim();
   if (message) {
     const data = {
       message,
-      chat: { uid: chatActual.uid },
+      chat: { uid: chatActualId },
       user: { uid: user.uid },
     };
-
-    socket.emit("enviar-mensaje", data, () => {
+    socket.emit("enviar-mensaje", data, (payload) => {
+      renderizarChats(payload, user);
       document.querySelector("#txtMensaje").value = "";
     });
   }
 });
 
-// btnAddContact.addEventListener("click", () => {
-//   console.log('add')
-// })
-
+//ENVIA NUEVO CONTACTO
 formAddContact.addEventListener("submit", (ev) => {
   ev.preventDefault();
   const errorNombre = document.querySelector("#error-nombre");
@@ -135,6 +105,7 @@ formAddContact.addEventListener("submit", (ev) => {
         numero: numero.value,
       },
     };
+
     socket.emit("enviar-contacto", data, (payload) => {
       errorNombre.textContent = "";
       errorNumero.textContent = "";
@@ -157,23 +128,35 @@ function validNumber(numero) {
   return patron.test(numero);
 }
 
-
-const dibujarMensajes = (mensajes = []) => {
-  let mensajesHTML = "";
-  mensajes.forEach(({ user, mensaje }) => {
-    mensajesHTML += `
-            <li>
-                <p>
-                    <span class="text-primary">${user}: </span>
-                    <span>${mensaje}</span>
-                </p>
-            </li>
-        `;
+const ulContacts = document.querySelector("#divUsuarios");
+function onClickAllUl(user) {
+  const lis = ulContacts.querySelectorAll("li");
+  lis.forEach((li) => {
+    li.onclick = () => {
+      chatActualId = li.id;
+      socket.emit("traer-chat", chatActualId, (chat) => {
+        renderizarChats(chat, user);
+      });
+    };
   });
+}
 
-  ulMensajes.innerHTML = mensajesHTML;
-};
+txtSearch.addEventListener("keyup",searchContacts);
 
+function searchContacts() {
+  const { value } = txtSearch;
+  const listContacts = ulContact.querySelectorAll("li");
+  listContacts.forEach((liContact) => {
+    const { textContent: valueNombre } =
+      liContact.querySelector("#nombre-contact");
+    const nombreCort = valueNombre
+      .toString()
+      .substring(0, value.length)
+      .toLowerCase();
+    if (nombreCort === value.toLowerCase()) liContact.style.display = "";
+    else liContact.style.display = "none";
+  });
+}
 
 const main = async () => {
   // Validar JWT

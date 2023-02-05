@@ -1,97 +1,116 @@
-const ulUsuarios = document.querySelector("#divUsuarios"); //UL CONTACTS
-const userImage = document.querySelector("#user-image");
-const ulMensajes = document.querySelector("#ulMensajes");
-const divChatbox = document.querySelector("#divChatbox"); //DIV MESSAGE
-let idChatGeneral = ''
+const boxMessage = document.querySelector("#box-messages-chats");
+const titleChat = document.querySelector("#title-chat");
 
-function sendMessages (){
-  const ul = ulUsuarios.querySelectorAll("li");
-  ul.forEach(li => {
-    li.onclick = function(){
-      const uid = this.id;
-      renderizarChats(uid)
-    }
-  });
+function renderContactsChats(listChats, user) {
+  const ulUsuarios = document.querySelector("#divUsuarios");
+  ulUsuarios.innerHTML = "";
+  for (const chatContact of listChats) {
+    const li = renderizarUsuarios(chatContact, user);
+    ulUsuarios.appendChild(li);
+  }
 }
 
-function renderizarUsuarios(personas) {
-
+function renderizarUsuarios(chat) {
   var html = "";
 
-  for (var i = 0; i < personas.length; i++) {
-    const { _id:uid ,img,tipo,users,nombre:nombreChat } = personas[i];
-    if(nombreChat ==='general') idChatGeneral = uid
-    const nombre = tipo === 'privado' ? users[0].nombre : personas[i].nombre
-    const estado = tipo !== 'privado' ? 'Online': ( !users[0].fecha_activo ? 'Inactive' : (users[0].online ? 'Online': 'Offline'))
-    html += `<li id="${uid}">`;
-    html +=
-      '    <a data-id="' +
-      uid +
-      `"  href="javascript:void(0)"><img src="${img?img : '../resources/user-image.jpg'}" alt="user-img" class="img-circle"> <span>` +
-      nombre[0].toUpperCase()+nombre.substring(1) +
-      ` <small class="text-${tipo !== 'privado' ? 'success': (users[0].online ? 'success':'danger' )}">
-      ${estado}</small></span></a>`;
-    html += "</li>";
-  }
+  const { _id: uid, img, tipo, users } = chat;
+  const nombre = tipo === "privado" ? users[0].nombre : chat.nombre;
+  const estado =
+    tipo !== "privado"
+      ? "Online"
+      : !users[0].fecha_activo
+      ? "Inactive"
+      : users[0].online
+      ? "Online"
+      : "Offline";
 
-  ulUsuarios.innerHTML = html;
-  sendMessages();
+  const numero = tipo !== "privado" ? "Grupo" : users[0].numero;
+  const li = document.createElement("li");
+
+  li.setAttribute("id", uid);
+  html +=
+    '    <a data-id=""' +
+    `"  href="javascript:void(0)"><img src="${
+      img ? img : "../resources/user-image.jpg"
+    }" alt="user-img" class="img-circle"> <span><span id="nombre-contact" style="font-weight: 500;">` +
+    nombre[0].toUpperCase() +
+    nombre.substring(1) +
+    "</span>" +
+    ` <small class="text-${
+      tipo !== "privado" ? "success" : users[0].online ? "success" : "danger"
+    }"><span id="numero-contact">${numero}</span> - 
+      ${estado}</small></span></a>`;
+  li.innerHTML = html;
+  return li;
 }
 
+function renderizarChats(chat, user) {
+  const { _id: uid, tipo, users, messages } = chat;
+  const nombre = tipo === "privado" ? users[0].nombre : chat.nombre;
+  titleChat.innerHTML = nombre.toUpperCase();
+  boxMessage.innerHTML = "";
+  const ul = document.createElement("ul");
+  ul.setAttribute("class", "chat-list p-20");
+  ul.setAttribute("id", uid + "ct");
 
+  const li = renderizarMensajes(messages, user);
+  ul.innerHTML = li;
+  boxMessage.appendChild(ul);
+  ul.scrollTop = ul.scrollHeight;
+}
 
 function renderizarMensajes(mensajes, userActual) {
-  var html = '';
-  var adminClass = 'info';
-  mensajes.forEach(({fecha, message , user: {nombre,img , _id:uid } }) => {
+  var html = "";
+  var adminClass = "info";
+  mensajes.forEach(({ fecha, message, user: { nombre, img, _id: uid } }) => {
     var fechaMessage = new Date(fecha);
-    var hora = fechaMessage.getHours() + ':' + fechaMessage.getMinutes();
-    
-    if (user.nombre === 'Administrador') {
-        adminClass = 'danger';
+    var hora = fechaMessage.getHours() + ":" + fechaMessage.getMinutes();
+
+    if (user.nombre === "Administrador") {
+      adminClass = "danger";
     }
-    
-    if (userActual.uid === uid) {
+
+    if (userActual.uid.toString() === uid.toString()) {
       html += '<li class="reverse">';
       html += '    <div class="chat-content">';
-      html += '        <h5>' + nombre + '</h5>';
-      html += '        <div class="box bg-light-inverse">' + message + '</div>';
-      html += '    </div>';
-      html += `    <div class="chat-img"><img src="${img?img : '../resources/user-image.jpg'}" alt="user" /></div>`;
-      html += '    <div class="chat-time">' + hora + '</div>';
-      html += '</li>';
-
-  } else {
-
+      html += "        <h5>" + nombre + "</h5>";
+      html += '    <div class="chat-time">' + hora + "</div>";
+      html += '        <div class="box bg-light-inverse">' + message + "</div>";
+      html += `    <div class="chat-img"><img src="${
+        img ? img : "../resources/user-image.jpg"
+      }" alt="user" /></div>`;
+      html += "    </div>";
+      html += "</li>";
+    } else {
       html += '<li class="animated fadeIn">';
 
-      if (nombre !== 'Administrador') {
-          html += `    <div class="chat-img"><img src="${img?img : '../resources/user-image.jpg'}" alt="user" /></div>`;
+      if (nombre !== "Administrador") {
+        html += `    <div class="chat-img"><img src="${
+          img ? img : "../resources/user-image.jpg"
+        }" alt="user" /></div>`;
       }
 
       html += '    <div class="chat-content">';
-      html += '        <h5>' + nombre + '</h5>';
-      html += '        <div class="box bg-light-' + adminClass + '">' + message + '</div>';
-      html += '    </div>';
-      html += '    <div class="chat-time">' + hora + '</div>';
-      html += '</li>';
-
-  }
+      html += "        <h5>" + nombre + "</h5>";
+      html +=
+        '        <div class="box bg-light-' +
+        adminClass +
+        '">' +
+        message +
+        "</div>";
+        html += '    <div class="chat-time">' + hora + "</div>";
+      html += "    </div>";
+      html += "</li>";
+    }
   });
-
-  
-
-
-  divChatbox.innerHTML += html;
-
-  document.getElementById("divChatbox").scrollTop = document.getElementById("divChatbox").scrollHeight;
-
+  return html;
 }
 
-
-function renderizarChats (uid = idChatGeneral){
-  const ulUsuario = document.querySelector("#divChatbox").cloneNode(true);
-  ulUsuario.setAttribute("id",uid);
-  console.log(ulUsuario)
-
+function changeUser(user) {
+  let { img, nombre } = user;
+  img = img ? img : "../resources/user-image.jpg";
+  document.getElementById("txt-user-img").src = img;
+  document.getElementById("txt-user-nombre").textContent = `${
+    nombre[0].toUpperCase() + nombre.substring(1)
+  } (Tú)`;
 }

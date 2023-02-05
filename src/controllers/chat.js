@@ -40,6 +40,24 @@ const findUserChat = async (nombre = "general") => {
   return chat ? chat.toJSON() : [];
 };
 
+const findChatId = async (id, userId) => {
+  const chats = await ChatModel.find({ _id: id })
+    .populate("users")
+    .populate({
+      path: "messages",
+      populate: {
+        path: "user",
+        model: "User",
+      },
+    });
+  return chats.map((chat) => {
+    const filteredUsers = chat.users.filter(
+      ({ _id: uid }) => uid.toString() !== userId.toString()
+    );
+    return { ...chat.toObject(), users: filteredUsers };
+  })[0];
+};
+
 const desconnectedUser = async (id) => {
   await UserModel.findByIdAndUpdate(id, {
     online: false,
@@ -52,6 +70,7 @@ const addMessageChat = async (chat, user, message) => {
   const chatFind = await ChatModel.findById(chat.uid);
   chatFind.messages.push(newMessage._id);
   await chatFind.save();
+  return 
 };
 
 const findAllChatUser = async ({ uid }) => {
@@ -90,7 +109,6 @@ const createContactChat = async (user, contacto) => {
     };
   const { _id: uid, nombre } = await guardarUsuario(contacto);
   const chastFind = await findOneChatUser(user.uid, uid);
-  console.log(chastFind);
   if (chastFind.length)
     return {
       ok: false,
@@ -112,4 +130,5 @@ module.exports = {
   addMessageChat,
   findAllChatUser,
   createContactChat,
+  findChatId,
 };
