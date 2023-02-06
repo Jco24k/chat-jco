@@ -8,7 +8,7 @@
     "start:dev": "nodemon ./src/app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jesus Coronado",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
