@@ -1,7 +1,10 @@
 const form_chat = document.querySelector("#form-chat");
 const msj = document.getElementById("mensajeLogin");
 
-const url = "http://localhost:3000/api/auth/login";
+
+const url = window.location.hostname.includes("localhost")
+  ? "http://localhost:3000/api/auth/"
+  : "https://chat-jco.onrender.com/api/auth/";
 
 function validNumber(numero) {
   var patron = /^9[0-9]{8}$/;
