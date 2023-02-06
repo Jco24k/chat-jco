@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  chat-jco:
+  socket-chat-jco:
     build:
       context: .
       dockerfile:
@@ -10,9 +10,9 @@ services:
     links:
       - db
     volumes:
-      - .:/Bases--NodeJs:delegated
+      - .:/socket-jco-chat:delegated
   db:
-    image: mongo:6-alpine
+    image: mongo:6
     ports:
       - "27017:27017"
     environment:
