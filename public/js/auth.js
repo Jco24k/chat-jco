@@ -4,7 +4,7 @@ const msj = document.getElementById("mensajeLogin");
 
 const url = window.location.hostname.includes("localhost")
   ? "http://localhost:3000/api/auth/"
-  : "https://chat-jco.onrender.com/api/auth/";
+  : "https://socket-chat-jco.onrender.com/api/auth/";
 
 function validNumber(numero) {
   var patron = /^9[0-9]{8}$/;
@@ -32,7 +32,7 @@ form_chat.addEventListener("submit", (ev) => {
       numero: telefono.value,
     };
     console.log(formData)
-    fetch(url, {
+    fetch(url+'login', {
       method: "POST",
       body: JSON.stringify(formData),
       headers: { "Content-Type": "application/json" },
